@@ -57,7 +57,7 @@ const SimpleInput = () => {
         {enteredNameIsInValid && (
           <p className="error-text">Name must not be empty</p>
         )}
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">Your Email</label>
         <input
           type="email"
           id="email"

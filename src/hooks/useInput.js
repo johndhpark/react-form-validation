@@ -7,8 +7,6 @@ const useInput = (isValidFunc) => {
 	const enteredInputIsValid = isValidFunc.call(null, enteredInput);
 	const inputIsInValid = !enteredInputIsValid && inputTouched;
 
-	//console.log(enteredInputIsValid);
-
 	const onInputChangeHandler = (event) => {
 		setEnteredInput(event.target.value);
 	};

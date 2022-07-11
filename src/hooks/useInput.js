@@ -1,12 +1,17 @@
 import { useReducer } from "react";
 
+const INIT_STATE = {
+	value: "",
+	isTouched: false,
+};
+
 const inputReducer = (state, action) => {
 	switch (action.type) {
 		case "SET_INPUT":
-			return { ...state, enteredInput: action.payload };
+			return { isTouched: state.isTouched, value: action.payload };
 		case "SET_TOUCHED":
-			return { ...state, inputTouched: action.payload };
-		case "RESET_STATE":
+			return { value: state.value, isTouched: true };
+		case "RESET":
 			return action.payload;
 		default:
 			return state;
@@ -14,13 +19,13 @@ const inputReducer = (state, action) => {
 };
 
 const useInput = (isValidFunc) => {
-	const [inputState, dispatchInputAction] = useReducer(inputReducer, {
-		enteredInput: "",
-		inputTouched: false,
-	});
+	const [inputState, dispatchInputAction] = useReducer(
+		inputReducer,
+		INIT_STATE
+	);
 
-	const enteredInputIsValid = isValidFunc.call(null, inputState.enteredInput);
-	const inputIsInValid = !enteredInputIsValid && inputState.inputTouched;
+	const valueIsValid = isValidFunc(inputState.value);
+	const inputIsInValid = !valueIsValid && inputState.isTouched;
 
 	const onInputChangeHandler = (event) => {
 		dispatchInputAction({
@@ -32,19 +37,18 @@ const useInput = (isValidFunc) => {
 	const onInputBlurHandler = () => {
 		dispatchInputAction({
 			type: "SET_TOUCHED",
-			payload: true,
 		});
 	};
 
 	const onInputSubmitHandler = () => {
 		dispatchInputAction({
 			type: "RESET",
-			payload: { enteredInput: "", inputTouched: false },
+			payload: { value: "", isTouched: false },
 		});
 	};
 
 	return [
-		inputState.enteredInput,
+		inputState.value,
 		inputIsInValid,
 		onInputChangeHandler,
 		onInputBlurHandler,
